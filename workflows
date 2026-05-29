@@ -1,1 +1,42 @@
+name: Deploy to Production Server
 
+on:
+  push:
+    branches:
+      - main  # Ganti dengan branch utama Anda jika berbeda (misal: master)
+
+jobs:
+  deploy:
+    name: Deploy Application
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Executing Remote SSH Commands to Deploy
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: 45.77.170.97
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          # Jika 50028 adalah port SSH Anda, biarkan tetap 50028.
+          # Jika 50028 adalah port aplikasi dan port SSH-nya default, silakan ganti menjadi 22.
+          port: 50028
+          script: |
+            echo "Koneksi berhasil ke server 45.77.170.97"
+            
+            # --- SESUAIKAN SCRIPT DI BAWAH INI DENGAN KEBUTUHAN SERVER ANDA ---
+            
+            # 1. Masuk ke folder proyek di server
+            # cd /var/www/nama-folder-proyek-anda
+            
+            # 2. Tarik kode terbaru dari repositori GitHub
+            # git pull origin main
+            
+            # 3. Restart aplikasi (Contoh jika menggunakan Node.js/PM2)
+            # npm install --production
+            # pm2 restart nama-aplikasi
+            
+            # Atau jika menggunakan Docker:
+            # docker-compose down && docker-compose up -d --build
